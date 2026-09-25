@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 
+const API_URL = 'https://student-registration-form-40op.onrender.com'
 const companies = [
   { name: 'Google', mark: 'G', tone: 'blue' }, { name: 'Microsoft', mark: 'M', tone: 'orange' },
   { name: 'Amazon', mark: 'a', tone: 'gold' }, { name: 'Apple', mark: '●', tone: 'ink' },
@@ -19,7 +20,7 @@ function App() {
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   useEffect(() => {
-    fetch('/api/registrations')
+    fetch(`${API_URL}/api/registrations`)
       .then((response) => response.ok ? response.json() : Promise.reject(new Error('Failed to load registrations.')))
       .then(setRegistrations)
       .catch(() => setError('The server is unavailable. Start the backend and try again.'))
@@ -32,7 +33,7 @@ function App() {
     if (selectedCompanies.length !== 4) return
     setError('')
     try {
-      const response = await fetch('/api/registrations', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, companies: selectedCompanies }) })
+      const response = await fetch(`${API_URL}/api/registrations`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...form, companies: selectedCompanies }) })
       const savedRegistration = await response.json()
       if (!response.ok) throw new Error(savedRegistration.message || 'Failed to save registration.')
       setRegistrations((current) => [savedRegistration, ...current])
